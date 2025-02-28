@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "Starting VS Code Tunnel on SWC HPC..."
+echo "Start time:" $(date '+%Y-%m-%d %H:%M:%S')
+
+while true; do
+	read -p "Do you want to connect to default node? (y/n)" yn
+	case $yn in
+		[Yy]* ) node="gpu-sr670-20"; srun --job-name=vscode -w $node -p gpu --gres=gpu:1 --mem=32G -n 4 --pty bash -c "echo 'connected to $node'; code tunnel";;
+		[Nn]* ) echo "Selecting GPU node available"; srun --job-name=vscode -p gpu --gres=gpu:1 --mem=32G -n 4 --pty bash -c "code tunnel";;
+			* ) echo "Please answer yes or no."; return; ;;
+	esac
+ done
+
+ echo "Shutting down VS Code Tunnel. See you!"
